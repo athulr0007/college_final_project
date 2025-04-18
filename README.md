@@ -1,171 +1,175 @@
-# Mock Interview System with AI Integration and Resume Parser
+# AI Mock Interview System
 
-This project is designed to provide a robust AI-powered mock interview system, integrated with resume parsing to extract relevant skills for tailored interview questions. The system leverages a combination of technologies including Node.js, Flask, MongoDB, and the Gemini API to simulate real interview experiences and evaluate user responses.
+## Overview
 
-## Features
+The **AI Mock Interview System** is a dynamic and adaptive interview simulation platform designed to help job seekers practice for technical interviews. The system leverages advanced AI techniques to generate relevant interview questions, evaluate answers, and provide personalized feedback to candidates. The platform includes resume parsing, skill extraction, interview question generation, and answer evaluation features, using AI-powered tools like **Gemini API** for generating questions and evaluating answers.
 
-- **AI-Powered Mock Interviews**: 
-  - The system generates adaptive interview questions based on the candidate's resume skills using the Gemini API.
-  - Real-time feedback is provided to the user regarding their responses, focusing on clarity, relevance, and overall performance.
-  
-- **Resume Parsing**:
-  - A Flask-based API to extract skills from a PDF resume using SpaCy's `PhraseMatcher` and predefined skill sets.
-  
-- **MongoDB Integration**:
-  - The system stores user responses, interview questions, and other data in a MongoDB database for tracking interview progress.
-
-## Tech Stack
-
-- **Backend**:
-  - **Node.js** with **Express**: For building the core mock interview system.
-  - **Flask**: For the resume parsing service.
-  - **MongoDB**: To store interview data and user information.
-  - **Gemini API**: To generate interview questions and evaluate answers.
-  
-- **Natural Language Processing**:
-  - **SpaCy**: Used for resume skill extraction via the `PhraseMatcher`.
+---
 
 ## Project Structure
 
-├── ai.js # AI logic for generating questions and evaluating answers ├── resparser.py # Flask-based API for resume parsing ├── server.js # Entry point for the mock interview system (Node.js) ├── package.json # Dependencies for Node.js ├── requirements.txt # Dependencies for Flask/Python ├── .env # Environment variables for API keys └── README.md # Project documentation
+The project is divided into multiple parts:
 
+- **Backend (Flask + MongoDB)**: Handles resume parsing, skill extraction, and the management of interview data.
+- **Server (Node.js + Express)**: Manages AI question generation, user authentication, and chat functionality.
+- **Frontend (React/EJS)**: Displays the user interface for candidates to interact with the system and receive feedback.
 
+---
 
-## Installation
+## Features
 
-Step 1: Clone the repository
-git clone <your-repository-url>
-cd <your-repository-directory>
+- **Resume Parsing**: Extracts skills and relevant information from resumes in PDF format using `pdfplumber` and SpaCy NLP.
+- **AI Question Generation**: Generates technical interview questions based on the candidate's skills using the Gemini API.
+- **Answer Evaluation**: Evaluates candidate answers to interview questions, providing feedback on clarity, relevance, and overall performance.
+- **User Authentication**: Supports login and registration for both candidates and admins.
+- **Admin Dashboard**: Allows administrators to view and manage interview data, including resumes and interview progress.
+- **Multimodal Feedback**: Combines text-based AI evaluations with emotional and body language analysis (if implemented in the frontend).
 
- Step 2: Set up the backend environment
- Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows, use venv\Scripts\activate
+---
 
- Install required dependencies for Flask and PDF parsing
-pip install -r requirements.txt
+## Prerequisites
 
- Step 3: Install frontend dependencies (if you have a frontend setup, e.g., React or EJS)
- For React-based frontend
-cd client
-npm install
+1. **MongoDB**: Ensure MongoDB is installed and running on your local machine or use a cloud instance like MongoDB Atlas.
+2. **Python**: Make sure Python 3.x is installed on your system.
+3. **Node.js**: Make sure Node.js (and npm) is installed for the backend and frontend setup.
 
- Or if you have an EJS-based setup (Node.js backend)
-cd client
-npm install
+---
 
- Step 4: Set up MongoDB (Make sure MongoDB is running locally or use a cloud instance)
- Ensure you have MongoDB running on the default port (27017) or adjust the database URI in your code if using cloud MongoDB
+## Installation and Setup
 
- Step 5: Start the Flask server for resume parsing
- In the backend directory, start the Flask app
-cd backend
-python resparser.py  # This will run the resume parser on Flask
+Follow these steps to set up the project on your local machine.
 
- Step 6: Start the Node.js server for the main application (if applicable)
-cd server
-npm start
+1. Clone the repository to your local machine:
 
- Step 7: Open your web browser and navigate to localhost:<port-number> to view the application
- Example: http://localhost:5000 for Node.js server or http://localhost:5001 for Flask API
+    ```bash
+    git clone <your-repository-url>
+    cd <your-repository-directory>
+    ```
 
- Optional: If you have a frontend running on a different port, configure it accordingly
+2. **Set Up the Backend Environment (Flask)**
 
-1. Mock Interview System (Node.js)
-POST /generate_questions:
+    - Create and activate a virtual environment for Python:
 
-Input: email (string)
+        ```bash
+        python -m venv venv
+        source venv/bin/activate  # On Windows, use venv\Scripts\activate
+        ```
 
-Output: Returns 5 interview questions based on the skills extracted from the user's resume.
+    - Install the required dependencies for the backend:
 
-POST /evaluate_answer:
+        ```bash
+        pip install -r requirements.txt
+        ```
 
-Input: question (string), userAnswer (string)
+    - Ensure MongoDB is running locally (or set up a cloud MongoDB instance). Adjust the MongoDB URI in your code if using a cloud database.
 
-Output: Returns feedback on the answer, including clarity, relevance, and overall performance.
+    - Start the Flask server for the resume parsing service:
 
-POST /generate_topic_questions:
+        ```bash
+        python resparser.py
+        ```
 
-Input: topic (string)
+3. **Set Up the Frontend and Server (Node.js)**
 
-Output: Returns 3 unique interview questions with answers for the given topic.
+    - If you are using **React** for the frontend:
 
-2. Resume Parsing API (Flask)
-POST /parse:
+        ```bash
+        cd client
+        npm install
+        npm start
+        ```
 
-Input: A PDF file uploaded in the request body.
+    - If you are using **EJS** (Node.js backend), follow these steps:
 
-Output: Returns a JSON object with the extracted skills from the resume.
+        ```bash
+        cd server
+        npm install
+        npm start
+        ```
 
-Example:
+4. **Open the Application**
 
-json
-Copy
-Edit
-{
-  "skills": ["Python", "JavaScript", "Node.js"]
-}
-Usage Example
-Example 1: Generating Interview Questions (Node.js)
-Send a POST request to /generate_questions with the user email.
+    After starting the backend and frontend servers, open your web browser and navigate to the following URLs:
 
-bash
-Copy
-Edit
-curl -X POST http://localhost:3000/generate_questions -d '{"email": "user@example.com"}' -H "Content-Type: application/json"
-You will receive a response with 5 interview questions based on the user's skills.
+    - Frontend: `http://localhost:3000` (for React-based frontend)
+    - Flask API: `http://localhost:5001` (for resume parsing)
+    - Server API: `http://localhost:5000` (for interview question generation and evaluation)
 
-Example 2: Parsing Resume for Skills (Flask)
-Send a POST request to /parse with the resume file:
+---
 
-bash
-Copy
-Edit
-curl -X POST http://localhost:5001/parse -F "file=@resume.pdf"
-You will receive a response with the extracted skills:
+## Usage
 
-json
-Copy
-Edit
-{
-  "skills": ["Python", "Django", "Machine Learning"]
-}
-Database Schema
-Users Collection: Stores user data including resumes and skills.
+### Resume Parsing
 
-email: String
+To use the resume parsing functionality:
 
-skills: Array of Strings (list of skills extracted from resume)
+1. Upload a PDF resume through the frontend interface.
+2. The system will parse the resume, extract skills, and save them in the database.
 
-Interview Questions Collection: Stores the AI-generated interview questions for each user.
+### AI Question Generation
 
-interviewId: Integer
+Once the candidate logs in and uploads their resume, the system will generate 5 technical interview questions based on their skills.
 
-email: String
+1. The candidate will receive 5 questions at the start of the interview.
+2. As the candidate answers each question, the system evaluates their answers and stores the responses.
+3. If the candidate completes 5 questions, the interview session will be marked as complete.
 
-questions: Array of Strings
+### Answer Evaluation
 
-Interview Responses Collection: Stores user responses and tracks progress.
+Once a candidate answers a question, the AI evaluates the answer based on:
 
-interviewId: Integer
+1. Clarity
+2. Relevance
+3. Overall score (out of 10)
+4. Detailed comments on how the candidate can improve their answers
 
-email: String
+### Admin Dashboard
 
-responses: Array of Objects
+Admins can log in to the dashboard to view candidate resumes, interview progress, and manage interview data.
 
-step: Integer
+---
 
-question: String
+## Technologies Used
 
-answer: String
+- **Backend**: Flask, MongoDB
+- **Frontend**: React (or EJS for Node.js), HTML/CSS/JS
+- **NLP**: SpaCy, PhraseMatcher
+- **AI**: Gemini API (for question generation and answer evaluation)
+- **PDF Parsing**: pdfplumber (for resume parsing)
+- **Authentication**: JWT (JSON Web Tokens) for secure authentication
 
-questionCount: Integer (tracks how many questions the user has answered)
+---
 
-Contributing
-Feel free to fork this repository, create an issue, or submit a pull request if you have suggestions or improvements.
+## API Endpoints
 
-Issues & Suggestions
-If you encounter bugs or need new features, please open an issue via the GitHub Issues tab.
+### POST /parse
 
-License
-This project is licensed under the MIT License.
+- **Description**: Parse the resume and extract skills.
+- **Request**: `POST` with PDF file in the request body.
+- **Response**: A list of skills found in the resume.
+
+### POST /generateQuestions
+
+- **Description**: Generate AI-based interview questions based on the candidate's skills.
+- **Request**: `POST` with user email to fetch skills and generate questions.
+- **Response**: A list of 5 AI-generated interview questions.
+
+### POST /evaluateAnswer
+
+- **Description**: Evaluate a candidate's answer to a specific interview question.
+- **Request**: `POST` with the question and user answer.
+- **Response**: Evaluation feedback with clarity, relevance, score, and comments.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- **Gemini API**: For generating questions and evaluating answers.
+- **SpaCy**: For NLP and skill extraction.
+- **pdfplumber**: For PDF resume parsing.
