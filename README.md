@@ -33,43 +33,43 @@ This project is designed to provide a robust AI-powered mock interview system, i
 
 ## Installation
 
-# Step 1: Clone the repository
+Step 1: Clone the repository
 git clone <your-repository-url>
 cd <your-repository-directory>
 
-# Step 2: Set up the backend environment
-# Create and activate a virtual environment
+ Step 2: Set up the backend environment
+ Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows, use venv\Scripts\activate
 
-# Install required dependencies for Flask and PDF parsing
+ Install required dependencies for Flask and PDF parsing
 pip install -r requirements.txt
 
-# Step 3: Install frontend dependencies (if you have a frontend setup, e.g., React or EJS)
-# For React-based frontend
+ Step 3: Install frontend dependencies (if you have a frontend setup, e.g., React or EJS)
+ For React-based frontend
 cd client
 npm install
 
-# Or if you have an EJS-based setup (Node.js backend)
+ Or if you have an EJS-based setup (Node.js backend)
 cd client
 npm install
 
-# Step 4: Set up MongoDB (Make sure MongoDB is running locally or use a cloud instance)
-# Ensure you have MongoDB running on the default port (27017) or adjust the database URI in your code if using cloud MongoDB
+ Step 4: Set up MongoDB (Make sure MongoDB is running locally or use a cloud instance)
+ Ensure you have MongoDB running on the default port (27017) or adjust the database URI in your code if using cloud MongoDB
 
-# Step 5: Start the Flask server for resume parsing
-# In the backend directory, start the Flask app
+ Step 5: Start the Flask server for resume parsing
+ In the backend directory, start the Flask app
 cd backend
 python resparser.py  # This will run the resume parser on Flask
 
-# Step 6: Start the Node.js server for the main application (if applicable)
+ Step 6: Start the Node.js server for the main application (if applicable)
 cd server
 npm start
 
-# Step 7: Open your web browser and navigate to localhost:<port-number> to view the application
-# Example: http://localhost:5000 for Node.js server or http://localhost:5001 for Flask API
+ Step 7: Open your web browser and navigate to localhost:<port-number> to view the application
+ Example: http://localhost:5000 for Node.js server or http://localhost:5001 for Flask API
 
-# Optional: If you have a frontend running on a different port, configure it accordingly
+ Optional: If you have a frontend running on a different port, configure it accordingly
 
 1. Mock Interview System (Node.js)
 POST /generate_questions:
