@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+body{
+    font-family: "Josefin Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+input{
+    padding: 10px 20px;
+    border: 2px solid #138496;
+    border-radius: 25px;
+    font-size: 25px;
+}
+
+.get-q{
+    background-color: #138496;
+    color: white;
+    border-radius: 25px;
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    font-size: 25px;
+    text-transform: uppercase;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.get-q:hover{
+    background-color: white;
+    border: 2px solid #138496;
+    color: #138496;
+}
+
+#questions-container{
+    margin: 80px 60px;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#load-more{
+    display: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background-color: azure;
+    border: 2px solid #138496;
+    text-transform: uppercase;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#load-more:hover{
+    background-color: #138496;
+    color: white;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mock Interview</title>
+    <link rel="stylesheet" href="/interview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1>Mock Interview</h1>
+
+    <div class="questioncontainer">
+        <div class="question">
+            <h2 id="question" data-interview-id="<%= interviewId %>"><%= question || "Loading question..." %></h2>
+        </div>
+
+    <!-- Video Preview -->
+     <div class="displaycontainer">
+        <video id="video-preview" autoplay playsinline></video>
+        <div class="button-container">
+            <button id="record-btn" onclick="toggleRecording()"><i class="fa-solid fa-microphone"></i> Start Recording</button>
+            <button id="video-btn" onclick="toggleVideo()"><i class="fa-solid fa-video"></i> Start Video</button>
+        </div>
+     </div>
+
+    </div>
+
+    <p><strong>Answer:</strong></p>
+    <textarea id="answer-box" rows="4" cols="50" placeholder="Your spoken answer will appear here..." oninput="checkAnswer()"></textarea>
+
+    <button id="submit-btn" onclick="submitAnswer()" disabled>Submit Answer</button>
+
+    <p id="status">Waiting for input...</p>
+
+    <script>
+        let recognition, isRecording = false, videoStream = null, finalAnswer = "";
+
+        function toggleRecording() {
+            if (!isRecording) startRecording();
+            else stopRecording();
+        }
+
+        function startRecording() {
+            if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+                alert("Your browser does not support speech recognition.");
+                return;
+            }
+
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = "en-US";
+
+            finalAnswer = ""; // Reset previous answer
+
+            recognition.onresult = (event) => {
+                let interimTranscript = "";
+                let latestFinalResult = "";
+
+                for (let i = 0; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        latestFinalResult = event.results[i][0].transcript.trim();
+                    } else {
+                        interimTranscript += event.results[i][0].transcript + " ";
+                    }
+                }
+
+                if (latestFinalResult) {
+                    finalAnswer += " " + latestFinalResult;
+                    interimTranscript = ""; // Clear interim results
+                }
+
+                document.getElementById("answer-box").value = (finalAnswer + " " + interimTranscript).trim();
+                checkAnswer();
+            };
+
+            recognition.onerror = (event) => console.error("Speech recognition error:", event.error);
+
+            recognition.start();
+            isRecording = true;
+            document.getElementById("record-btn").innerText = "🛑 Stop Recording";
+        }
+
+        function stopRecording() {
+            if (recognition) recognition.stop();
+            isRecording = false;
+            document.getElementById("record-btn").innerText = "🎤 Start Recording";
+            checkAnswer();
+        }
+
+        async function toggleVideo() {
+            try {
+                if (!videoStream) {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    document.getElementById("video-preview").srcObject = videoStream;
+                    document.getElementById("video-btn").innerText = "📹 Stop Video";
+                } else {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    videoStream = null;
+                    document.getElementById("video-preview").srcObject = null;
+                    document.getElementById("video-btn").innerText = "📹 Start Video";
+                }
+            } catch (err) {
+                alert("📹 Camera access denied or not supported!");
+                console.error("Camera error:", err);
+            }
+        }
+
+        function checkAnswer() {
+            let answer = document.getElementById("answer-box").value.trim();
+            document.getElementById("submit-btn").disabled = answer === "";
+        }
+
+        async function submitAnswer() {
+    const answer = document.getElementById("answer-box").value.trim();
+    if (!answer) return alert("Please provide an answer before submitting.");
+
+    document.getElementById("status").innerText = "Submitting answer...";
+    const interviewId = document.getElementById("question").dataset.interviewId;
+
+    const response = await fetch("/submit-answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: "<%= email %>", 
+            answer, 
+            currentQuestion: document.getElementById("question").innerText, 
+            interviewId
+        })
+    });
+
+    const data = await response.json();
+
+    // ✅ Ensure question is displayed properly
+    if (data.complete) {
+        alert("Interview complete! Redirecting to summary...");
+        window.location.href = `/interview-summary?interviewId=${interviewId}`;
+    } else if (typeof data.question === "string") {
+        document.getElementById("question").innerText = data.question;  // ✅ Show the next question
+        document.getElementById("answer-box").value = "";  // ✅ Clear previous answer
+        document.getElementById("answer-box").disabled = false;  // ✅ Ensure user can type
+        document.getElementById("status").innerText = "Waiting for next question...";
+    } else {
+        console.error("Invalid question format:", data.question);
+        alert("Error retrieving the next question.");
+    }
+}
+
+
+    </script>
+</body>
+</html>

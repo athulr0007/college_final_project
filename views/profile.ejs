@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" href="/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h2>Profile</h2>
+    <p>Email: <%= user.email %></p>
+
+    <% if (user.skills && user.skills.length > 0) { %>
+        <h3>Skills</h3>
+        <ul class="skill-list">
+            <% user.skills.forEach(skill => { %>
+                <li><%= skill %></li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>⚠️ No skills listed.</p>
+    <% } %>
+
+    <% if (user.resumeFile) { %>
+        <p>✅ Resume already uploaded.</p>
+        
+        <!-- ✅ Delete Resume Button -->
+        <form id="delete-resume-form" action="/delete-resume" method="POST">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete your resume?')" class="delete-btn"><i class="fa-solid fa-trash-can"></i> Delete Resume</button>
+        </form>
+    <% } %>
+
+    <!-- ✅ Upload Resume Form -->
+    <form id="upload-form" action="/upload-resume" method="POST" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
+        <button type="submit"> <i class="fa-solid fa-arrows-rotate"></i> <%= user.resumeFile ? "Replace Resume" : "Upload Resume" %></button>
+    </form>
+
+    <h3>📝 Interview Summaries</h3>
+    <% if (interviews && interviews.length > 0) { %>
+        <ul>
+            <% interviews.forEach(interview => { %>
+                <li>
+                    <strong>Interview ID:</strong> <%= interview.interviewId %> | 
+                    <strong>Date:</strong> <%= interview.createdAt ? new Date(interview.createdAt).toDateString() : "Unknown Date" %> |
+                    <strong>Questions Answered:</strong> <%= interview.responses ? interview.responses.length : 0 %>
+                    <a href="/interview-summary?interviewId=<%= interview.interviewId %>">🔍 View Details</a>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>⚠️ No interviews found.</p>
+    <% } %>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+    <script>
+        // ✅ Auto-refresh profile after uploading resume
+        document.getElementById("upload-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const response = await fetch("/upload-resume", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // ✅ Refresh after 1 second
+            }
+        });
+
+        // ✅ Auto-refresh profile after deleting resume
+        document.getElementById("delete-resume-form")?.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const response = await fetch("/delete-resume", {
+                method: "POST"
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // ✅ Refresh after 1 second
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+        h2, h3 { margin-top: 40px; color: #2c3e50; }
+        ul { list-style: none; padding-left: 0; }
+        li { margin-bottom: 16px; background: #fff; padding: 12px 16px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+        a.button, button.view-btn {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .skills-box {
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #eef4ff;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .logout-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #d00;
+        }
+    </style>
+    <script>
+        function toggleSkills(id) {
+            const box = document.getElementById('skills-' + id);
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <h2>👨‍💼 Welcome Admin</h2>
+
+    <h3>📄 Uploaded Resumes</h3>
+    <ul>
+        <% resumes.forEach((resume, index) => { %>
+            <li>
+                <strong><%= resume.email %></strong>
+                <button class="view-btn" onclick="toggleSkills(<%= index %>)">View Skills</button>
+                <a class="button" href="/admin/chat/<%= resume.email %>">Chat</a>
+
+                <div class="skills-box" id="skills-<%= index %>">
+                    Skills: <%= resume.skills.join(', ') %>
+                </div>
+            </li>
+        <% }) %>
+    </ul>
+
+    <h3>📝 Interview Summaries</h3>
+    <ul>
+        <% interviews.forEach(interview => { %>
+            <li>
+                <strong>Interview ID: <%= interview.interviewId %></strong>
+                • User: <%= interview.email %>
+                <a class="button" href="/admin/interview-summary/<%= interview.interviewId %>">View Summary</a>
+            </li>
+        <% }) %>
+    </ul>
+
+    <p><a class="logout-link" href="/admin/logout">Logout</a></p>
+</body>
+</html>

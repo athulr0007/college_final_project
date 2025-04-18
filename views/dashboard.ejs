@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="nav">
+        <h2>WELCOME<br><span class="username"><%= user.email %></span></h2>
+        <a href="/profile" class="profile-btn"> <i class="fa-solid fa-user"></i><br>Profile</a>
+    </div>
+    <div class="content">
+        <p> <span class="aip">ai powered</span> <br> <span class="title">mock interview system</span><br><br>Revolutionizing Interview Preparation with AI-Powered Mock Interviews <br>
+            In today's competitive world, preparing for interviews requires more than just brushing up on technical skills. <br> It's about understanding industry expectations, refining communication, and tackling challenging questions with confidence. <br> </p>
+        <a href="/interview" class="start-btn">Start Interview</a>
+    </div>
+    <a href="/prepare" class="prepare">Let's Prepare</a>
+   
+<a href="/chat" class="chat-btn"><i class="fa-solid fa-comments"></i> Chat with Admin</a>
+
+    <footer style="position: fixed; bottom: 10px; right: 10px;">
+        <a href="/logout" class="logout-btn"><i class="fa-solid fa-arrow-left-long"></i> Logout</a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Prepare Mode</title>
+    <link rel="stylesheet" href="/prepare.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <h1><i class="fa-solid fa-book-open-reader"></i> PREPARE MODE</h1>
+    
+    <form id="topic-form">
+        <label for="topic"></label>
+        <input type="text" id="topic" name="topic" placeholder="Enter your topic" required>
+        <button type="submit" class="get-q"><i class="fa-solid fa-magnifying-glass"></i> Get Questions</button>
+    </form>
+    <div class="container">
+        <div id="questions-container"></div>
+
+        <button id="load-more"><i class="fa-solid fa-angles-right"></i> Load More</button>
+    </div>
+    
+    <script>
+        let offset = 0; // ✅ Tracks the number of questions loaded
+    
+        document.getElementById("topic-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const topic = document.getElementById("topic").value;
+            offset = 0; // ✅ Reset offset for new topic
+            fetchQuestions(topic, true);
+        });
+    
+        document.getElementById("load-more").addEventListener("click", () => {
+            const topic = document.getElementById("topic").value;
+            fetchQuestions(topic, false);
+        });
+    
+        async function fetchQuestions(topic, isFirstLoad) {
+            try {
+                const response = await fetch(`/get-questions?topic=${encodeURIComponent(topic)}&offset=${offset}`);
+                const data = await response.json();
+    
+                if (data.error) {
+                    document.getElementById("questions-container").innerHTML = `<p style="color:red;">❌ ${data.error}</p>`;
+                    return;
+                }
+    
+                if (data.questions.length > 0) {
+                    const container = document.getElementById("questions-container");
+                    if (isFirstLoad) container.innerHTML = ""; // ✅ Clear previous questions if fetching new topic
+    
+                    data.questions.forEach((q, index) => {
+                        const div = document.createElement("div");
+                        div.innerHTML = `<h3>Q${offset + index + 1}: ${q.question}</h3><p><strong>AI Answer:</strong> ${q.answer}</p>`;
+                        container.appendChild(div);
+                    });
+    
+                    offset = data.nextOffset; // ✅ Update offset to track loaded questions
+                    document.getElementById("load-more").style.display = "block";
+                } else {
+                    document.getElementById("load-more").style.display = "none"; // ✅ Hide "Load More" if no more questions
+                }
+            } catch (error) {
+                console.error("❌ Error fetching questions:", error);
+                document.getElementById("questions-container").innerHTML = `<p style="color:red;">❌ Failed to fetch questions.</p>`;
+            }
+        }
+    </script>
+    
+</body>
+</html>

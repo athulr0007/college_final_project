@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>User Chat</title>
+  <style>
+    #messages {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .msg {
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    .me {
+      background-color: #d1e7dd;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .admin {
+      background-color: #f8d7da;
+      margin-right: auto;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align: center;">Chat with Admin</h2>
+
+  <div id="messages">
+    <% messages.forEach(msg => { 
+         const sender = typeof msg.from === 'object' ? msg.from.email : msg.from;
+    %>
+      <div class="msg <%= sender === 'admin' ? 'admin' : 'me' %>">
+        <strong><%= sender %>:</strong> <%= msg.message %>
+      </div>
+    <% }) %>
+  </div>
+
+  <form action="/chat" method="POST" style="text-align: center; margin-top: 20px;">
+    <input type="text" name="message" placeholder="Type your message" required style="width: 60%;">
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>
